@@ -8,24 +8,56 @@
     <title>Sign In module in JavaScript</title>
     <meta name="description" content="The HTML5 Herald">
     <meta name="author" content="SitePoint">
-
-    <!--<link rel="stylesheet" href="css/styles.css?v=1.0">-->
+    <meta name="viewport" content="width=device-width, inital-scale=1">
+    <link rel="stylesheet" href="css/bulma/bulma.css">
 
 </head>
 
 <body>
     <script src="js/scripts.js"></script>
-    <div>
-        First:
-        <input type="text" id="firstName" value="Mike">
-    </div>
-    <div>Last:
-        <input type="text" id="lastName" value="Jones">
-    </div>
-    <input type="button" onclick="addNew()" value="Add to queue">
-
-    <div id="queueContainer">
-        <span value="displayPeople()"></span>
+    <div class="container is-widescreen">
+        <div class="columns">
+            <div class="column">
+                <div>
+                    <!-- <div class="dropdown">
+                        <div class="dropdown-trigger">
+                            <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                                <span>Salutation</span>
+                                <span class="icon is-small">
+                                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                </span>
+                            </button>
+                        </div>
+                        <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                            <div class="dropdown-content">
+                                <a href="#" class="dropdown-item">
+                                    Ms.
+                                </a>
+                                <a class="dropdown-item">
+                                    Mrs.
+                                </a>
+                                <a href="#" class="dropdown-item is-active">
+                                    Mr.
+                                </a>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+                <div>
+                    First:
+                    <input type="text" id="firstName" value="Mike">
+                </div>
+                <div>Last:
+                    <input type="text" id="lastName" value="Jones">
+                </div>
+                <input type="button" onclick="addNew()" value="Add to queue">
+            </div>
+            <div class="column box">
+                <div id="queueContainer">
+                    <span value="displayPeople()"></span>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 
