@@ -1,4 +1,9 @@
 let people = [];
+let reasonsForVisit = [
+    {'id': 0, 'reason': 'Because'},
+    {'id': 1, 'reason': 'Never mind'},
+    {'id': 2, 'reason': 'Lost keys'},
+];
 let counter = 0;
 
 function addNew() {
