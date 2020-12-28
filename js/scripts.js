@@ -2,6 +2,7 @@ let randomFirstNames = ['Michael', 'John', 'Tutya', 'Camilla', 'Misty', 'Khakhil
 let randomLastNames = ['Jones', 'Smith', 'Cranston', 'Cockeshi', 'Kensie', 'Lones'];
 document.addEventListener('DOMContentLoaded', function () {
     setRandomName();
+    loadReasonsForVisit();
 }, false);
 
 function setRandomName() {
@@ -9,8 +10,8 @@ function setRandomName() {
     let lNameIndex = getRandomInt(randomLastNames.length) ;
     let randomFName = randomFirstNames[fNameIndex];
     let randomLName = randomLastNames[lNameIndex];
-    console.log('fName index ' + fNameIndex);
-    console.log('lName index ' + lNameIndex);
+    // console.log('fName index ' + fNameIndex);
+    // console.log('lName index ' + lNameIndex);
     document.getElementById("firstName").value = randomFName;
     document.getElementById("lastName").value = randomLName;
 }
@@ -18,7 +19,10 @@ function setRandomName() {
 function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));
 }
-
+//set up reasons
+function loadReasonsForVisit() {
+    let container = document.getElementById("reasonsForVisit");
+}
 
 let people = [];
 let reasonsForVisit = [
