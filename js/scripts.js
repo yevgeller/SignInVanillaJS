@@ -1,8 +1,30 @@
+let randomFirstNames = ['Michael', 'John', 'Tutya', 'Camilla', 'Misty', 'Khakhilla'];
+let randomLastNames = ['Jones', 'Smith', 'Cranston', 'Cockeshi', 'Kensie', 'Lones'];
+document.addEventListener('DOMContentLoaded', function () {
+    setRandomName();
+}, false);
+
+function setRandomName() {
+    let fNameIndex = getRandomInt(randomFirstNames.length) ;
+    let lNameIndex = getRandomInt(randomLastNames.length) ;
+    let randomFName = randomFirstNames[fNameIndex];
+    let randomLName = randomLastNames[lNameIndex];
+    console.log('fName index ' + fNameIndex);
+    console.log('lName index ' + lNameIndex);
+    document.getElementById("firstName").value = randomFName;
+    document.getElementById("lastName").value = randomLName;
+}
+
+function getRandomInt(max) {
+    return Math.floor(Math.random() * Math.floor(max));
+}
+
+
 let people = [];
 let reasonsForVisit = [
-    {'id': 0, 'reason': 'Because'},
-    {'id': 1, 'reason': 'Never mind'},
-    {'id': 2, 'reason': 'Lost keys'},
+    { 'id': 0, 'reason': 'Because' },
+    { 'id': 1, 'reason': 'Never mind' },
+    { 'id': 2, 'reason': 'Lost keys' },
 ];
 let counter = 0;
 
@@ -58,8 +80,8 @@ function displayPeople() {
 
 function showPerson(divId) {
     let id = divId.replace("person", "");
-    let removed = people.find(x=>x.id == id);
+    let removed = people.find(x => x.id == id);
     console.log(removed);
-    people = people.filter(x=>x.id != id);
+    people = people.filter(x => x.id != id);
     refreshQueue();
 }
