@@ -6,8 +6,8 @@ document.addEventListener('DOMContentLoaded', function () {
 }, false);
 
 function setRandomName() {
-    let fNameIndex = getRandomInt(randomFirstNames.length) ;
-    let lNameIndex = getRandomInt(randomLastNames.length) ;
+    let fNameIndex = getRandomInt(randomFirstNames.length);
+    let lNameIndex = getRandomInt(randomLastNames.length);
     let randomFName = randomFirstNames[fNameIndex];
     let randomLName = randomLastNames[lNameIndex];
     // console.log('fName index ' + fNameIndex);
@@ -21,14 +21,52 @@ function getRandomInt(max) {
 }
 //set up reasons
 function loadReasonsForVisit() {
+    for (let i = 0; i < reasonsForVisit.length; i++) {
+        addReasonForVisit(reasonsForVisit[i])
+    }
+}
+
+function addReasonForVisit(reason) {
     let container = document.getElementById("reasonsForVisit");
+    let li = document.createElement("li");
+    let chb = document.createElement("input");
+    chb.type = "checkbox";
+    chb.value = reason.reason;
+    let chbKey = "reason" + reason.id;
+    chb.name = chbKey;
+    chb.id = chbKey;
+    let lbl = document.createElement("label");
+    lbl.htmlFor = chbKey;
+    lbl.appendChild(chb);
+    lbl.appendChild(document.createTextNode("   " + reason.reason));
+    lbl.classList.add("checkbox");
+    li.appendChild(lbl);
+    container.appendChild(li);
+}
+
+function collectCheckedReasonsForVisit() {
+    let selectedReasons = [];
+    let li = document.getElementById("reasonsForVisit");
+    for (let i = 0; i < li.length; i++) {
+        let chb = li.children[i].children[0].children[0];
+        if (chb.type == "checkbox") {
+            let id = chb.id.replace("reason", "");
+            let checked = chb.checked;
+            if(checked) {
+                //save
+            }
+        }
+    }
 }
 
 let people = [];
 let reasonsForVisit = [
     { 'id': 0, 'reason': 'Because' },
-    { 'id': 1, 'reason': 'Never mind' },
-    { 'id': 2, 'reason': 'Lost keys' },
+    { 'id': 10, 'reason': 'Never mind' },
+    { 'id': 20, 'reason': 'Vacation' },
+    { 'id': 30, 'reason': 'Travel voucher' },
+    { 'id': 40, 'reason': 'Deployment' },
+    { 'id': 50, 'reason': 'Training' },
 ];
 let counter = 0;
 
