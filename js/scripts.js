@@ -1,11 +1,23 @@
+//import * as ms from '../node_modules/ms/index'
+
 let randomFirstNames = ['Michael', 'John', 'Tutya', 'Camilla', 'Misty', 'Khakhilla'];
 let randomLastNames = ['Jones', 'Smith', 'Cranston', 'Cockeshi', 'Kensie', 'Lones'];
 document.addEventListener('DOMContentLoaded', function () {
-    setRandomName();
     loadReasonsForVisit();
+    setRandomGuest();
 }, false);
+let people = [];
+let reasonsForVisit = [
+    { 'id': 0, 'reason': 'Because' },
+    { 'id': 10, 'reason': 'Never mind' },
+    { 'id': 20, 'reason': 'Vacation' },
+    { 'id': 30, 'reason': 'Travel voucher' },
+    { 'id': 40, 'reason': 'Deployment' },
+    { 'id': 50, 'reason': 'Training' },
+];
+let counter = 0;
 
-function setRandomName() {
+function setRandomGuest() {
     let fNameIndex = getRandomInt(randomFirstNames.length);
     let lNameIndex = getRandomInt(randomLastNames.length);
     let randomFName = randomFirstNames[fNameIndex];
@@ -14,6 +26,14 @@ function setRandomName() {
     // console.log('lName index ' + lNameIndex);
     document.getElementById("firstName").value = randomFName;
     document.getElementById("lastName").value = randomLName;
+    let li = document.getElementById("reasonsForVisit");
+    for (let i = 0; i < li.childElementCount; i++) {
+        let chb = li.children[i].children[0].children[0];
+        if (chb.type == "checkbox") {
+            let j = Math.random();
+            chb.checked = j < 0.35;
+        }
+    }
 }
 
 function getRandomInt(max) {
@@ -47,38 +67,33 @@ function addReasonForVisit(reason) {
 function collectCheckedReasonsForVisit() {
     let selectedReasons = [];
     let li = document.getElementById("reasonsForVisit");
-    for (let i = 0; i < li.length; i++) {
+    for (let i = 0; i < li.childElementCount; i++) {
         let chb = li.children[i].children[0].children[0];
-        if (chb.type == "checkbox") {
+        if (chb.type == "checkbox" && chb.checked) {
             let id = chb.id.replace("reason", "");
-            let checked = chb.checked;
-            if(checked) {
-                //save
-            }
+            let selectedReason = reasonsForVisit.find(x => x.id == id);
+            selectedReasons.push(selectedReason);
+            //find the reason
+            //save the reason
         }
     }
-}
 
-let people = [];
-let reasonsForVisit = [
-    { 'id': 0, 'reason': 'Because' },
-    { 'id': 10, 'reason': 'Never mind' },
-    { 'id': 20, 'reason': 'Vacation' },
-    { 'id': 30, 'reason': 'Travel voucher' },
-    { 'id': 40, 'reason': 'Deployment' },
-    { 'id': 50, 'reason': 'Training' },
-];
-let counter = 0;
+    return selectedReasons;
+}
 
 function addNew() {
     let fNameContainer = document.getElementById("firstName");
     let lNameContainer = document.getElementById("lastName");
     let firstName = fNameContainer.value;
     let lastName = lNameContainer.value;
+    let whyCame = collectCheckedReasonsForVisit();
+    let now = new Date();
     let newPerson = {
         'name': lastName + ', ' + firstName,
-        'when': new Date(),
-        'id': counter++
+        'when': now,
+        'whenMs': now.getTime(),
+        'id': counter++,
+        'whyCame': collectCheckedReasonsForVisit()
     };
     people.push(newPerson);
 
@@ -94,10 +109,12 @@ function refreshQueue() {
         div.append("No one in queue");
     } else {
         for (var i = 0; i < people.length; i++) {
+            let now = new Date();
+            let nowMs = now.getTime();
             let id = people[i].id;
             let pDiv = document.createElement("div");
             pDiv.id = "person" + id;
-            pDiv.innerHTML = people[i].name + ', arrived: ' + people[i].when;
+            pDiv.innerHTML = people[i].name + ', arrived: ' + people[i].whenMs;
             let btn = document.createElement("button");
             btn.innerHTML = "Remove";
             btn.addEventListener('click', function () {
