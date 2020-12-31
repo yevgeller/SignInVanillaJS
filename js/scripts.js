@@ -18,6 +18,7 @@ let reasonsForVisit = [
 let counter = 0;
 
 function setRandomGuest() {
+    console.log("setRandomGuest called");
     let fNameIndex = getRandomInt(randomFirstNames.length);
     let lNameIndex = getRandomInt(randomLastNames.length);
     let randomFName = randomFirstNames[fNameIndex];
@@ -39,12 +40,14 @@ function getRandomInt(max) {
 }
 
 function loadReasonsForVisit() {
+    console.log("loadReasonsForVisit called");
     for (let i = 0; i < reasonsForVisit.length; i++) {
         addReasonForVisit(reasonsForVisit[i])
     }
 }
 
 function addReasonForVisit(reason) {
+    console.log("addReasonForVisit called");
     let container = document.getElementById("reasonsForVisit");
     let li = document.createElement("li");
     let chb = document.createElement("input");
@@ -53,6 +56,8 @@ function addReasonForVisit(reason) {
     let chbKey = "reason" + reason.id;
     chb.name = chbKey;
     chb.id = chbKey;
+    chb.addEventListener('change', canEnableAddingToQueue);
+
     let lbl = document.createElement("label");
     lbl.htmlFor = chbKey;
     lbl.appendChild(chb);
@@ -62,7 +67,14 @@ function addReasonForVisit(reason) {
     container.appendChild(li);
 }
 
+function canEnableAddingToQueue() {
+    let btn = document.getElementById("addToQueueBtn");
+    btn.disabled = collectCheckedReasonsForVisit().length <= 0;
+}
+
 function collectCheckedReasonsForVisit() {
+    console.log("collectCheckedReasonsForVisit called");
+
     let selectedReasons = [];
     let li = document.getElementById("reasonsForVisit");
     for (let i = 0; i < li.childElementCount; i++) {
@@ -78,11 +90,12 @@ function collectCheckedReasonsForVisit() {
 }
 
 function addNew() {
+    console.log("addNew called");
+
     let fNameContainer = document.getElementById("firstName");
     let lNameContainer = document.getElementById("lastName");
     let firstName = fNameContainer.value;
     let lastName = lNameContainer.value;
-    let whyCame = collectCheckedReasonsForVisit();
     let now = new Date();
     let newPerson = {
         'name': lastName + ', ' + firstName,
@@ -99,6 +112,8 @@ function addNew() {
 }
 
 function refreshQueue() {
+    console.log("refreshQueue called");
+
     let div = document.createElement("div");
     if (people.length === 0) {
         div.append("No one in queue");
@@ -110,6 +125,7 @@ function refreshQueue() {
             let pDiv = document.createElement("div");
             pDiv.id = "person" + id;
             pDiv.innerHTML = people[i].name + ', arrived ' + computeAgo(nowMs, people[i].whenMs);
+            pDiv.innerHTML += ' (' + people[i].whyCame.map(x => x['reason']) + ').';
             let btn = document.createElement("button");
             btn.innerHTML = "Remove";
             btn.addEventListener('click', function () {
@@ -130,13 +146,15 @@ function computeAgo(now, from) {
     let oneMin = 60000;
     let fiveMin = oneMin * 5;
     let diff = now - from;
-    if (diff < thirtySec) return 'just now.' //30 sec
-    else if (diff < oneMin) return 'less than a minute ago.'
-    else if (diff < fiveMin) return 'within the last 5 min.'
-    else return Math.round(diff / oneMin) + ' minutes ago.'
+    if (diff < thirtySec) return 'just now' //30 sec
+    else if (diff < oneMin) return 'less than a minute ago'
+    else if (diff < fiveMin) return 'within the last 5 min'
+    else return Math.round(diff / oneMin) + ' minutes ago'
 }
 
 function showPerson(divId) {
+    console.log("showPerson called");
+
     let id = divId.replace("person", "");
     let removed = people.find(x => x.id == id);
     console.log(removed);
