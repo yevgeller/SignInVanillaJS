@@ -22,8 +22,6 @@ function setRandomGuest() {
     let lNameIndex = getRandomInt(randomLastNames.length);
     let randomFName = randomFirstNames[fNameIndex];
     let randomLName = randomLastNames[lNameIndex];
-    // console.log('fName index ' + fNameIndex);
-    // console.log('lName index ' + lNameIndex);
     document.getElementById("firstName").value = randomFName;
     document.getElementById("lastName").value = randomLName;
     let li = document.getElementById("reasonsForVisit");
@@ -39,7 +37,7 @@ function setRandomGuest() {
 function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));
 }
-//set up reasons
+
 function loadReasonsForVisit() {
     for (let i = 0; i < reasonsForVisit.length; i++) {
         addReasonForVisit(reasonsForVisit[i])
@@ -73,8 +71,6 @@ function collectCheckedReasonsForVisit() {
             let id = chb.id.replace("reason", "");
             let selectedReason = reasonsForVisit.find(x => x.id == id);
             selectedReasons.push(selectedReason);
-            //find the reason
-            //save the reason
         }
     }
 
@@ -96,8 +92,7 @@ function addNew() {
         'whyCame': collectCheckedReasonsForVisit()
     };
     people.push(newPerson);
-
-    fNameContainer.value = lNameContainer.value = 'abc';
+    setRandomGuest();
 
     console.log(people);
     refreshQueue();
@@ -108,13 +103,13 @@ function refreshQueue() {
     if (people.length === 0) {
         div.append("No one in queue");
     } else {
+        let nowMs = (new Date()).getTime();
+
         for (var i = 0; i < people.length; i++) {
-            let now = new Date();
-            let nowMs = now.getTime();
             let id = people[i].id;
             let pDiv = document.createElement("div");
             pDiv.id = "person" + id;
-            pDiv.innerHTML = people[i].name + ', arrived: ' + people[i].whenMs;
+            pDiv.innerHTML = people[i].name + ', arrived ' + computeAgo(nowMs, people[i].whenMs);
             let btn = document.createElement("button");
             btn.innerHTML = "Remove";
             btn.addEventListener('click', function () {
@@ -130,11 +125,15 @@ function refreshQueue() {
     container.append(div);
 }
 
-function displayPeople() {
-    if (people.length === 0) {
-        return "<div>No one in the queue</div>";
-    }
-    //let ret = "<div>No"
+function computeAgo(now, from) {
+    let thirtySec = 30000;
+    let oneMin = 60000;
+    let fiveMin = oneMin * 5;
+    let diff = now - from;
+    if (diff < thirtySec) return 'just now.' //30 sec
+    else if (diff < oneMin) return 'less than a minute ago.'
+    else if (diff < fiveMin) return 'within the last 5 min.'
+    else return Math.round(diff / oneMin) + ' minutes ago.'
 }
 
 function showPerson(divId) {
