@@ -1,13 +1,13 @@
 //import * as ms from '../node_modules/ms/index'
 
-let randomFirstNames = ['Michael', 'John', 'Tutya', 'Camilla', 'Misty', 'Khakhilla'];
-let randomLastNames = ['Jones', 'Smith', 'Cranston', 'Cockeshi', 'Kensie', 'Lones'];
+const randomFirstNames = ['Michael', 'John', 'Tutya', 'Camilla', 'Misty', 'Khakhilla'];
+const randomLastNames = ['Jones', 'Smith', 'Cranston', 'Cockeshi', 'Kensie', 'Lones'];
 document.addEventListener('DOMContentLoaded', function () {
     loadReasonsForVisit();
     setRandomGuest();
 }, false);
 let people = [];
-let reasonsForVisit = [
+const reasonsForVisit = [
     { 'id': 0, 'reason': 'Because' },
     { 'id': 10, 'reason': 'Never mind' },
     { 'id': 20, 'reason': 'Vacation' },
@@ -19,13 +19,13 @@ let counter = 0;
 
 function setRandomGuest() {
     console.log("setRandomGuest called");
-    let fNameIndex = getRandomInt(randomFirstNames.length);
-    let lNameIndex = getRandomInt(randomLastNames.length);
-    let randomFName = randomFirstNames[fNameIndex];
-    let randomLName = randomLastNames[lNameIndex];
+    const fNameIndex = getRandomInt(randomFirstNames.length);
+    const lNameIndex = getRandomInt(randomLastNames.length);
+    const randomFName = randomFirstNames[fNameIndex];
+    const randomLName = randomLastNames[lNameIndex];
     document.getElementById("firstName").value = randomFName;
     document.getElementById("lastName").value = randomLName;
-    let li = document.getElementById("reasonsForVisit");
+    const li = document.getElementById("reasonsForVisit");
     for (let i = 0; i < li.childElementCount; i++) {
         let chb = li.children[i].children[0].children[0];
         if (chb.type == "checkbox") {
@@ -94,10 +94,10 @@ function addNew() {
 
     let fNameContainer = document.getElementById("firstName");
     let lNameContainer = document.getElementById("lastName");
-    let firstName = fNameContainer.value;
-    let lastName = lNameContainer.value;
-    let now = new Date();
-    let newPerson = {
+    const firstName = fNameContainer.value;
+    const lastName = lNameContainer.value;
+    const now = new Date();
+    const newPerson = {
         'name': lastName + ', ' + firstName,
         'when': now,
         'whenMs': now.getTime(),
@@ -109,6 +109,20 @@ function addNew() {
 
     console.log(people);
     refreshQueue();
+    showModal();
+}
+
+function showModal() {
+    console.log("showModal called");
+    const modal = document.getElementById("registrationSucceededModal");
+    modal.classList.add("is-active");
+    setTimeout(closeModal, 5000);
+}
+
+function closeModal() {
+    console.log("closeModal called");
+    const modal = document.getElementById("registrationSucceededModal");
+    modal.classList.remove("is-active");
 }
 
 function refreshQueue() {
@@ -118,10 +132,10 @@ function refreshQueue() {
     if (people.length === 0) {
         div.append("No one in queue");
     } else {
-        let nowMs = (new Date()).getTime();
+        const nowMs = (new Date()).getTime();
 
         for (var i = 0; i < people.length; i++) {
-            let id = people[i].id;
+            const id = people[i].id;
             let pDiv = document.createElement("div");
             pDiv.id = "person" + id;
             pDiv.innerHTML = people[i].name + ', arrived ' + computeAgo(nowMs, people[i].whenMs);
@@ -142,10 +156,10 @@ function refreshQueue() {
 }
 
 function computeAgo(now, from) {
-    let thirtySec = 30000;
-    let oneMin = 60000;
-    let fiveMin = oneMin * 5;
-    let diff = now - from;
+    const thirtySec = 30000;
+    const oneMin = 60000;
+    const fiveMin = oneMin * 5;
+    const diff = now - from;
     if (diff < thirtySec) return 'just now' //30 sec
     else if (diff < oneMin) return 'less than a minute ago'
     else if (diff < fiveMin) return 'within the last 5 min'
@@ -155,8 +169,8 @@ function computeAgo(now, from) {
 function showPerson(divId) {
     console.log("showPerson called");
 
-    let id = divId.replace("person", "");
-    let removed = people.find(x => x.id == id);
+    const id = divId.replace("person", "");
+    const removed = people.find(x => x.id == id);
     console.log(removed);
     people = people.filter(x => x.id != id);
     refreshQueue();

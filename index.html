@@ -10,6 +10,7 @@
     <meta name="author" content="SitePoint">
     <meta name="viewport" content="width=device-width, inital-scale=1">
     <link rel="stylesheet" href="css/bulma/bulma.css">
+    <link rel="stylesheet" href="css/site.css">
 
 </head>
 
@@ -18,8 +19,7 @@
     <div class="container is-widescreen">
         <div class="columns">
             <div class="column is-half">
-
-                <div class="columns">
+                <div class="columns" name="menu">
                     <div class="column">
                         <div class="field">
                             <label class="label">Salutation</label>
@@ -55,20 +55,33 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
-
-
                 <div class="field">
                     <div class="control">
                         <button id="addToQueueBtn" class="button is-link" onclick="addNew()">Add to Queue</button>
                     </div>
                 </div>
+
+
             </div>
             <div class="column box is-half">
                 <div id="queueContainer"></div>
             </div>
         </div>
+
+    </div>
+
+    <div id="registrationSucceededModal" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div>
+                <div class="notification is-success">
+                    You are in the queue now. Go sit down.
+                </div>
+                <!-- <button aria-label="close" onclick="closeModal()" class="button is-link">Close</button> -->
+            </div>
+        </div>
+        <button class="modal-close is-large" aria-label="close" onclick="closeModal()"></button>
     </div>
 </body>
 
