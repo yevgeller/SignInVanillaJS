@@ -116,7 +116,7 @@ function showModal() {
     console.log("showModal called");
     const modal = document.getElementById("registrationSucceededModal");
     modal.classList.add("is-active");
-    setTimeout(closeModal, 5000);
+    setTimeout(closeModal, 1000);
 }
 
 function closeModal() {
