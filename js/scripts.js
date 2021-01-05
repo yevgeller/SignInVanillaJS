@@ -108,7 +108,7 @@ function addNew() {
     setRandomGuest();
 
     console.log(people);
-    refreshQueue();
+    //refreshQueue();
     showModal();
 }
 
@@ -173,5 +173,5 @@ function showPerson(divId) {
     const removed = people.find(x => x.id == id);
     console.log(removed);
     people = people.filter(x => x.id != id);
-    refreshQueue();
+    //refreshQueue();
 }
