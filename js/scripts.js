@@ -2,6 +2,14 @@
 
 const randomFirstNames = ['Michael', 'John', 'Tutya', 'Camilla', 'Misty', 'Khakhilla'];
 const randomLastNames = ['Jones', 'Smith', 'Cranston', 'Cockeshi', 'Kensie', 'Lones'];
+const servicePersonnel = [
+    { name: 'Helper, One', id: 101 },
+    { name: 'Helper, Two', id: 102 },
+    { name: 'Helper, Three', id: 103 },
+    { name: 'Helper, Four', id: 104 },
+    { name: 'Helper, Five', id: 105 }
+];
+
 document.addEventListener('DOMContentLoaded', function () {
     loadReasonsForVisit();
     setRandomGuest();
@@ -108,7 +116,7 @@ function addNew() {
     setRandomGuest();
 
     console.log(people);
-    //refreshQueue();
+    refreshQueue();
     showModal();
 }
 
@@ -140,6 +148,18 @@ function refreshQueue() {
             pDiv.id = "person" + id;
             pDiv.innerHTML = people[i].name + ', arrived ' + computeAgo(nowMs, people[i].whenMs);
             pDiv.innerHTML += ' (' + people[i].whyCame.map(x => x['reason']) + ').';
+
+            let helpersContainer = document.createElement('div');
+            helpersContainer.classList.add('select');
+            let helpers = document.createElement('select');
+            for (let i = 0; i < servicePersonnel.length; i++) {
+                let option = document.createElement('option');
+                option.text = servicePersonnel[i].name;
+                option.value = servicePersonnel[i].id;
+                helpers.add(option, 0);
+            }
+            helpersContainer.append(helpers);
+            pDiv.append(helpersContainer);
             let btn = document.createElement("button");
             btn.innerHTML = "Remove";
             btn.addEventListener('click', function () {
@@ -174,4 +194,14 @@ function showPerson(divId) {
     console.log(removed);
     people = people.filter(x => x.id != id);
     //refreshQueue();
+}
+
+function toggleAdminInterface() {
+    const adminUIDiv = document.getElementById("adminInterface");
+
+    if (adminUIDiv.classList.contains('is-hidden')) {
+        adminUIDiv.classList.remove('is-hidden');
+    } else {
+        adminUIDiv.classList.add('is-hidden');
+    }
 }

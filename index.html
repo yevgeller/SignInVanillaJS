@@ -43,61 +43,66 @@
         </div>
     </section>
 
-    <div class="container" id="userMenu">
-        <!-- <div class="columns"> -->
-        <!-- <div class="column is-half"> -->
-        <div class="columns" name="menu">
-            <div class="column is-4 is-offset-2">
-                <div class="field">
-                    <label class="label">Salutation</label>
-                    <div class="control">
-                        <div class="select">
-                            <select>
-                                <option>Mr.</option>
-                                <option>Mrs.</option>
-                                <option>Ms.</option>
-                            </select>
+    <div id="userMenu">
+        <div class="container">
+            <!-- <div class="columns"> -->
+            <!-- <div class="column is-half"> -->
+            <div class="columns" name="menu">
+                <div class="column is-4 is-offset-2">
+                    <div class="field">
+                        <label class="label">Salutation</label>
+                        <div class="control">
+                            <div class="select">
+                                <select>
+                                    <option>Mr.</option>
+                                    <option>Mrs.</option>
+                                    <option>Ms.</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">First:</label>
+                        <div class="control">
+                            <input type="text" id="firstName">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Last:</label>
+                        <div class="control">
+                            <input type="text" id="lastName" value="Jones">
                         </div>
                     </div>
                 </div>
-                <div class="field">
-                    <label class="label">First:</label>
-                    <div class="control">
-                        <input type="text" id="firstName">
-                    </div>
-                </div>
-                <div class="field">
-                    <label class="label">Last:</label>
-                    <div class="control">
-                        <input type="text" id="lastName" value="Jones">
-                    </div>
-                </div>
-            </div>
-            <div class="column is-4">
-                <div class="field">
-                    <label class="label">What can we help you with today?</label>
-                    <div class="control">
-                        <ul id="reasonsForVisit">
-                        </ul>
+                <div class="column is-4">
+                    <div class="field">
+                        <label class="label">What can we help you with today?</label>
+                        <div class="control">
+                            <ul id="reasonsForVisit">
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="container">
         <div class="columns is-mobile is-centered">
             <div class="column is-half">
-                <div class="control">
-                    <button id="addToQueueBtn" class="button is-link" onclick="addNew()">Add to Queue</button>
+                <div class="content has-text-centered">
+                    <button id="addToQueueBtn" class="button is-link" onclick="addNew()">Sign In</button>
                 </div>
             </div>
         </div>
+    </div>
 
-
-        <!-- </div> -->
-        <!-- <div class="column box is-half">
+    <div id="adminInterface" class="is-hidden" style="padding-top:100px;">
+        <div class="columns is-mobile is-centered">
+            <div class="column box is-half">
                 <div id="queueContainer"></div>
-            </div> -->
-        <!-- </div> -->
-
+            </div>
+        </div>
     </div>
 
 
@@ -114,6 +119,11 @@
         </div>
         <button class="modal-close is-large" aria-label="close" onclick="closeModal()"></button>
     </div>
+    <footer class="footer" style="margin-top:200px;">
+        <div class="content has-text-centered">
+            <button class="button is-link" onclick="toggleAdminInterface()">Toggle admin interface</button>
+        </div>
+    </footer>
 </body>
 
 </html>
