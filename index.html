@@ -17,60 +17,95 @@
 
 <body>
     <script src="js/scripts.js"></script>
-    <div class="container is-widescreen">
-        <div class="columns">
-            <div class="column is-half">
-                <div class="columns" name="menu">
-                    <div class="column">
-                        <div class="field">
-                            <label class="label">Salutation</label>
-                            <div class="control">
-                                <div class="select">
-                                    <select>
-                                        <option>Mr.</option>
-                                        <option>Mrs.</option>
-                                        <option>Ms.</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label class="label">First:</label>
-                            <div class="control">
-                                <input type="text" id="firstName">
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label class="label">Last:</label>
-                            <div class="control">
-                                <input type="text" id="lastName" value="Jones">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="column">
-                        <div class="field">
-                            <label class="label">What can we help you with today?</label>
-                            <div class="control">
-                                <ul id="reasonsForVisit">
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="field">
-                    <div class="control">
-                        <button id="addToQueueBtn" class="button is-link" onclick="addNew()">Add to Queue</button>
-                    </div>
-                </div>
 
-
+    <section class="hero">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">Sign In Application</h1>
+                <h2 class="subtitle">An example fully developed in plain JavaScript</h2>
             </div>
+        </div>
+    </section>
+
+    <div class="container padTopBottom24">
+        <div class="notification is-primary">
+            Please enter your information here as well as the reason for your visit.
+        </div>
+    </div>
+
+    <section class="section">
+        <div class="container">
+            <h1 class="title">Section</h1>
+            <h2 class="subtitle">
+                A simple container to divide your page into <strong>sections</strong>, like the one you're currently
+                reading
+            </h2>
+        </div>
+    </section>
+
+    <div id="userMenu">
+        <div class="container">
+            <!-- <div class="columns"> -->
+            <!-- <div class="column is-half"> -->
+            <div class="columns" name="menu">
+                <div class="column is-4 is-offset-2">
+                    <div class="field">
+                        <label class="label">Salutation</label>
+                        <div class="control">
+                            <div class="select">
+                                <select>
+                                    <option>Mr.</option>
+                                    <option>Mrs.</option>
+                                    <option>Ms.</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">First:</label>
+                        <div class="control">
+                            <input type="text" id="firstName">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Last:</label>
+                        <div class="control">
+                            <input type="text" id="lastName" value="Jones">
+                        </div>
+                    </div>
+                </div>
+                <div class="column is-4">
+                    <div class="field">
+                        <label class="label">What can we help you with today?</label>
+                        <div class="control">
+                            <ul id="reasonsForVisit">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="columns is-mobile is-centered">
+            <div class="column is-half">
+                <div class="content has-text-centered">
+                    <button id="addToQueueBtn" class="button is-link" onclick="addNew()">Sign In</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="adminInterface" class="is-hidden" style="padding-top:100px;">
+        <div class="columns is-mobile is-centered">
             <div class="column box is-half">
                 <div id="queueContainer"></div>
             </div>
         </div>
-
     </div>
+
+
 
     <div id="registrationSucceededModal" class="modal">
         <div class="modal-background"></div>
@@ -84,6 +119,11 @@
         </div>
         <button class="modal-close is-large" aria-label="close" onclick="closeModal()"></button>
     </div>
+    <footer class="footer" style="margin-top:200px;">
+        <div class="content has-text-centered">
+            <button class="button is-link" onclick="toggleAdminInterface()">Toggle admin interface</button>
+        </div>
+    </footer>
 </body>
 
 </html>
