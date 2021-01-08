@@ -3,14 +3,15 @@
 const randomFirstNames = ['Michael', 'John', 'Tutya', 'Camilla', 'Misty', 'Khakhilla'];
 const randomLastNames = ['Jones', 'Smith', 'Cranston', 'Cockeshi', 'Kensie', 'Lones'];
 const servicePersonnel = [
-    { name: 'Helper, One', id: 101 },
-    { name: 'Helper, Two', id: 102 },
-    { name: 'Helper, Three', id: 103 },
-    { name: 'Helper, Four', id: 104 },
-    { name: 'Helper, Five', id: 105 }
+    { name: 'Johnson, Boris', id: 101 },
+    { name: 'Merkel, Angela', id: 102 },
+    { name: 'Trudeau, Justin', id: 103 },
+    { name: 'Makron, Emmanuel', id: 104 },
+    { name: 'Seviche, Alexandro', id: 105 }
 ];
 
 document.addEventListener('DOMContentLoaded', function () {
+    servicePersonnel.sort(compareHelpers);
     loadReasonsForVisit();
     setRandomGuest();
 }, false);
@@ -152,13 +153,27 @@ function refreshQueue() {
             let helpersContainer = document.createElement('div');
             helpersContainer.classList.add('select');
             let helpers = document.createElement('select');
-            for (let i = 0; i < servicePersonnel.length; i++) {
+            helpers.id = "person" + id + "HelpersList";
+            let defaultOption = document.createElement('option');
+            defaultOption.text = 'Choose...';
+            defaultOption.value = -1;
+            helpers.add(defaultOption, 1);
+
+            for (let i = servicePersonnel.length - 1; i >= 0; i--) {
                 let option = document.createElement('option');
                 option.text = servicePersonnel[i].name;
                 option.value = servicePersonnel[i].id;
                 helpers.add(option, 0);
             }
+
+            helpersContainer.addEventListener('change', disableSettingUnselectedHelper.bind(null, id));
             helpersContainer.append(helpers);
+            let setHelperButton = document.createElement("button");
+            setHelperButton.innerHTML = "Set Helper";
+            setHelperButton.id = "person" + id + "HelperSetter";
+            setHelperButton.disabled = true;
+            setHelperButton.addEventListener('click', setHelper.bind(null, id));
+            helpersContainer.appendChild(setHelperButton);
             pDiv.append(helpersContainer);
             let btn = document.createElement("button");
             btn.innerHTML = "Remove";
@@ -173,6 +188,17 @@ function refreshQueue() {
     let container = document.getElementById("queueContainer");
     container.innerHTML = "";
     container.append(div);
+}
+
+function setHelper(id) {
+    const helperId = document.getElementById("person" + id + "HelpersList").value;
+    var i = 1;
+    //alert(id);
+}
+
+function disableSettingUnselectedHelper(id) {
+    const helperId =  document.getElementById("person" + id + "HelpersList").value;
+        document.getElementById("person" + id + "HelperSetter").disabled = helperId < 0;
 }
 
 function computeAgo(now, from) {
@@ -204,4 +230,16 @@ function toggleAdminInterface() {
     } else {
         adminUIDiv.classList.add('is-hidden');
     }
+}
+
+function compareHelpers(a, b) {
+    const nameA = a.name.toUpperCase();
+    const nameB = b.name.toUpperCase();
+    let comparison = 0;
+    if (nameA > nameB) {
+        comparison = 1;
+    } else if (nameA < nameB) {
+        comparison = -1;
+    }
+    return comparison;
 }
