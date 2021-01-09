@@ -168,12 +168,21 @@ function refreshQueue() {
 
             helpersContainer.addEventListener('change', disableSettingUnselectedHelper.bind(null, id));
             helpersContainer.append(helpers);
+
             let setHelperButton = document.createElement("button");
             setHelperButton.innerHTML = "Set Helper";
             setHelperButton.id = "person" + id + "HelperSetter";
             setHelperButton.disabled = true;
             setHelperButton.addEventListener('click', setHelper.bind(null, id));
+            
+            let changeHelperButton = document.createElement("button");
+            changeHelperButton.innerHTML = "Change Helper";
+            changeHelperButton.id = "person" + id + "HelperChanger";
+            changeHelperButton.classList.add("is-hidden");
+            changeHelperButton.addEventListener('click', changeHelper.bind(null, id));
+            
             helpersContainer.appendChild(setHelperButton);
+            helpersContainer.appendChild(changeHelperButton);
             pDiv.append(helpersContainer);
             let btn = document.createElement("button");
             btn.innerHTML = "Remove";
@@ -192,8 +201,20 @@ function refreshQueue() {
 
 function setHelper(id) {
     const helperId = document.getElementById("person" + id + "HelpersList").value;
-    var i = 1;
-    //alert(id);
+    let person = people.find(x=>x.id == id);
+    person.helperId = helperId;
+    document.getElementById("person" + id + "HelperSetter").classList.add("is-hidden");
+    document.getElementById("person" + id + "HelpersList").disabled = true;
+    document.getElementById("person" + id + "HelperChanger").classList.remove("is-hidden");
+}
+
+function changeHelper(id) {
+    const helperId = document.getElementById("person" + id + "HelpersList").value;
+    let person = people.find(x=>x.id == id);
+    person.helperId = null;
+    document.getElementById("person" + id + "HelperSetter").classList.remove("is-hidden");
+    document.getElementById("person" + id + "HelpersList").disabled = false;
+    document.getElementById("person" + id + "HelperChanger").classList.add("is-hidden");
 }
 
 function disableSettingUnselectedHelper(id) {
