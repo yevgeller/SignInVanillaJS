@@ -14,6 +14,9 @@ document.addEventListener('DOMContentLoaded', function () {
     servicePersonnel.sort(compareHelpers);
     loadReasonsForVisit();
     setRandomGuest();
+    while(people.length < 3) {
+        addNew();
+    }
 }, false);
 let people = [];
 const reasonsForVisit = [
@@ -115,11 +118,12 @@ function addNew() {
     const lastName = lNameContainer.value;
     const now = new Date();
     const newPerson = {
-        'name': lastName + ', ' + firstName,
-        'when': now,
-        'whenMs': now.getTime(),
-        'id': counter++,
-        'whyCame': collectCheckedReasonsForVisit()
+        name: lastName + ', ' + firstName,
+        when: now,
+        whenMs: now.getTime(),
+        id: counter++,
+        whyCame: collectCheckedReasonsForVisit(),
+        whenDone: null
     };
     people.push(newPerson);
     setRandomGuest();
@@ -150,13 +154,14 @@ function refreshQueue() {
         div.append("No one in queue");
     } else {
         const nowMs = (new Date()).getTime();
+        let customersInLobby = people.filter(x=>x.whenDone == null);
 
-        for (var i = 0; i < people.length; i++) {
+        for (var i = 0; i < customersInLobby.length; i++) {
             const id = people[i].id;
             let pDiv = document.createElement("div");
             pDiv.id = "person" + id;
             pDiv.innerHTML = '<strong>' + people[i].name + '</strong>, arrived <u>' + computeAgo(nowMs, people[i].whenMs) + '</u>';
-            pDiv.innerHTML += '<i>(' + people[i].whyCame.map(x => x['reason']) + ')</i>.';
+            pDiv.innerHTML += ' <i>(' + people[i].whyCame.map(x => x['reason']) + ')</i>.';
 
             let helpersContainer = document.createElement('div');
             helpersContainer.classList.add('select');
@@ -179,19 +184,10 @@ function refreshQueue() {
             helpersContainer.append(helpers);
 
             let setHelperButton = createElementWithOptions("button", "Set Helper", ["button", "is-success"], "person" + id + "HelperSetter"); //document.createElement("button");
-            // setHelperButton.classList.add("button");
-            // setHelperButton.classList.add("is-success");
-            // setHelperButton.innerHTML = "Set Helper";
-            // setHelperButton.id = "person" + id + "HelperSetter";
             setHelperButton.disabled = true;
             setHelperButton.addEventListener('click', setHelper.bind(null, id));
 
             let changeHelperButton = createElementWithOptions("button", "Change Helper", ["button", "is-warning", "is-hidden"], "person" + id + "HelperChanger");
-            //document.createElement("button");
-            // changeHelperButton.classList.add(["button", "is-warning"]);
-            // changeHelperButton.innerHTML = "Change Helper";
-            // changeHelperButton.id = "person" + id + "HelperChanger";
-            // changeHelperButton.classList.add("is-hidden");
             changeHelperButton.addEventListener('click', changeHelper.bind(null, id));
 
             let buttonsDiv = document.createElement("div");
@@ -199,10 +195,6 @@ function refreshQueue() {
 
             let beingHelpedByBanner = createElementWithOptions("span", "Currently being assisted by:", ["is-hidden"], "person" + id + "beingHelpedByBanner");
 
-            // let beingHelpedByBanner = document.createElement("span");
-            // beingHelpedByBanner.id = "person" + id + "beingHelpedByBanner";
-            // beingHelpedByBanner.innerHTML = "Currently being assissted by: ";
-            // beingHelpedByBanner.classList.add("is-hidden");
             buttonsDiv.append(beingHelpedByBanner);
             buttonsDiv.append(helpersContainer);
             buttonsDiv.append(setHelperButton);
@@ -229,14 +221,6 @@ function refreshQueue() {
     container.append(div);
 }
 
-// function createButton(content, classes, id) {
-//     let btn = document.createElement("button");
-//     btn.id = id;
-//     btn.innerHTML = content;
-//     btn.classList.add(...classes);
-//     return btn;
-// }
-
 function createElementWithOptions(type, innerHTML, classList, id){
     let el = document.createElement(type);
     el.id = id;
@@ -248,7 +232,16 @@ function createElementWithOptions(type, innerHTML, classList, id){
 function setHelper(id) {
     const helperId = document.getElementById("person" + id + "HelpersList").value;
     let person = people.find(x => x.id == id);
-    person.helperId = helperId;
+    if(!('helpersHistory' in person)){
+        person.helpersHistory = [];
+    }
+    person.helpersHistory.push({
+        id: helperId,
+        startedWhen: (new Date()).getTime(),
+        endedWhen: null
+    });
+    person.isBeingHelped = true;
+    console.log(person);
     document.getElementById("person" + id + "HelperSetter").classList.add("is-hidden");
     document.getElementById("person" + id + "HelpersList").disabled = true;
     document.getElementById("person" + id + "HelperChanger").classList.remove("is-hidden");
@@ -258,7 +251,10 @@ function setHelper(id) {
 function changeHelper(id) {
     const helperId = document.getElementById("person" + id + "HelpersList").value;
     let person = people.find(x => x.id == id);
-    person.helperId = null;
+    person.isBeingHelped = false;
+    let helperRecord = person.helpersHistory.find(x=>x.id === helperId && x.endedWhen == null);
+    helperRecord.endedWhen = (new Date).getTime();
+    console.log(person);
     document.getElementById("person" + id + "HelperSetter").classList.remove("is-hidden");
     document.getElementById("person" + id + "HelpersList").disabled = false;
     document.getElementById("person" + id + "HelperChanger").classList.add("is-hidden");
@@ -286,8 +282,9 @@ function showPerson(divId) {
 
     const id = divId.replace("person", "");
     const removed = people.find(x => x.id == id);
+    removed.whenDone = (new Date()).getTime();
     console.log(removed);
-    people = people.filter(x => x.id != id);
+    // people = people.filter(x => x.id != id);
     refreshQueue();
 }
 

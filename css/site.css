@@ -6,3 +6,15 @@
 .padTop12 {
     padding-top: 12px;
 }
+
+.button {
+    margin-left: 6px;
+}
+
+.select {
+    margin-left: 6px;
+}
+
+.noMarginLeft {
+    margin-left: 0px;
+}
