@@ -39,11 +39,12 @@ function setRandomGuest() {
     for (let i = 0; i < li.childElementCount; i++) {
         let chb = li.children[i].children[0].children[0];
         if (chb.type == "checkbox") {
+            chb.checked = false; //reset
             let j = Math.random();
             if(j < 0.35) {
                 chb.checked = true;
                 flag = true;
-            }
+            } 
         }
     }
     if(!flag) {
@@ -177,7 +178,7 @@ function refreshQueue() {
             helpersContainer.addEventListener('change', disableSettingUnselectedHelper.bind(null, id));
             helpersContainer.append(helpers);
 
-            let setHelperButton = createButton("Set Helper", ["button", "is-success"], "person" + id + "HelperSetter"); //document.createElement("button");
+            let setHelperButton = createElementWithOptions("button", "Set Helper", ["button", "is-success"], "person" + id + "HelperSetter"); //document.createElement("button");
             // setHelperButton.classList.add("button");
             // setHelperButton.classList.add("is-success");
             // setHelperButton.innerHTML = "Set Helper";
@@ -185,7 +186,7 @@ function refreshQueue() {
             setHelperButton.disabled = true;
             setHelperButton.addEventListener('click', setHelper.bind(null, id));
 
-            let changeHelperButton = createButton("Change Helper", ["button", "is-warning", "is-hidden"], "person" + id + "HelperChanger");
+            let changeHelperButton = createElementWithOptions("button", "Change Helper", ["button", "is-warning", "is-hidden"], "person" + id + "HelperChanger");
             //document.createElement("button");
             // changeHelperButton.classList.add(["button", "is-warning"]);
             // changeHelperButton.innerHTML = "Change Helper";
@@ -195,10 +196,13 @@ function refreshQueue() {
 
             let buttonsDiv = document.createElement("div");
             buttonsDiv.classList.add("padTop12");
-            let beingHelpedByBanner = document.createElement("span");
-            beingHelpedByBanner.id = "person" + id + "beingHelpedByBanner";
-            beingHelpedByBanner.innerHTML = "Currently being assissted by: ";
-            beingHelpedByBanner.classList.add("is-hidden");
+
+            let beingHelpedByBanner = createElementWithOptions("span", "Currently being assisted by:", ["is-hidden"], "person" + id + "beingHelpedByBanner");
+
+            // let beingHelpedByBanner = document.createElement("span");
+            // beingHelpedByBanner.id = "person" + id + "beingHelpedByBanner";
+            // beingHelpedByBanner.innerHTML = "Currently being assissted by: ";
+            // beingHelpedByBanner.classList.add("is-hidden");
             buttonsDiv.append(beingHelpedByBanner);
             buttonsDiv.append(helpersContainer);
             buttonsDiv.append(setHelperButton);
@@ -209,7 +213,7 @@ function refreshQueue() {
             mgmtDiv.id = "person" + id + "mgmt";
             mgmtDiv.classList.add("padTop12");
 
-            let btn = createButton("Remove", ["button", "is-danger"], "person" + id + "Remover");
+            let btn = createElementWithOptions("button", "Remove", ["button", "is-danger"], "person" + id + "Remover");
             btn.addEventListener('click', function () {
                 showPerson('person' + id);
             });
@@ -231,6 +235,14 @@ function createButton(content, classes, id) {
     btn.innerHTML = content;
     btn.classList.add(...classes);
     return btn;
+}
+
+function createElementWithOptions(type, innerHTML, classList, id){
+    let el = document.createElement(type);
+    el.id = id;
+    el.innerHTML = innerHTML;
+    el.classList.add(...classList);
+    return el;
 }
 
 function setHelper(id) {
@@ -276,7 +288,7 @@ function showPerson(divId) {
     const removed = people.find(x => x.id == id);
     console.log(removed);
     people = people.filter(x => x.id != id);
-    //refreshQueue();
+    refreshQueue();
 }
 
 function toggleAdminInterface() {
