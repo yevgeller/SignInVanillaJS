@@ -35,12 +35,19 @@ function setRandomGuest() {
     document.getElementById("firstName").value = randomFName;
     document.getElementById("lastName").value = randomLName;
     const li = document.getElementById("reasonsForVisit");
+    let flag = false;
     for (let i = 0; i < li.childElementCount; i++) {
         let chb = li.children[i].children[0].children[0];
         if (chb.type == "checkbox") {
             let j = Math.random();
-            chb.checked = j < 0.35;
+            if(j < 0.35) {
+                chb.checked = true;
+                flag = true;
+            }
         }
+    }
+    if(!flag) {
+        document.getElementById("addToQueueBtn").disabled = true;
     }
 }
 
@@ -125,7 +132,7 @@ function showModal() {
     console.log("showModal called");
     const modal = document.getElementById("registrationSucceededModal");
     modal.classList.add("is-active");
-    setTimeout(closeModal, 1000);
+    setTimeout(closeModal, 100);
 }
 
 function closeModal() {
@@ -147,11 +154,12 @@ function refreshQueue() {
             const id = people[i].id;
             let pDiv = document.createElement("div");
             pDiv.id = "person" + id;
-            pDiv.innerHTML = people[i].name + ', arrived ' + computeAgo(nowMs, people[i].whenMs);
-            pDiv.innerHTML += ' (' + people[i].whyCame.map(x => x['reason']) + ').';
+            pDiv.innerHTML = '<strong>' + people[i].name + '</strong>, arrived <u>' + computeAgo(nowMs, people[i].whenMs) + '</u>';
+            pDiv.innerHTML += '<i>(' + people[i].whyCame.map(x => x['reason']) + ')</i>.';
 
             let helpersContainer = document.createElement('div');
             helpersContainer.classList.add('select');
+            helpersContainer.name = "helpersContainer";
             let helpers = document.createElement('select');
             helpers.id = "person" + id + "HelpersList";
             let defaultOption = document.createElement('option');
@@ -169,28 +177,46 @@ function refreshQueue() {
             helpersContainer.addEventListener('change', disableSettingUnselectedHelper.bind(null, id));
             helpersContainer.append(helpers);
 
-            let setHelperButton = document.createElement("button");
-            setHelperButton.innerHTML = "Set Helper";
-            setHelperButton.id = "person" + id + "HelperSetter";
+            let setHelperButton = createButton("Set Helper", ["button", "is-success"], "person" + id + "HelperSetter"); //document.createElement("button");
+            // setHelperButton.classList.add("button");
+            // setHelperButton.classList.add("is-success");
+            // setHelperButton.innerHTML = "Set Helper";
+            // setHelperButton.id = "person" + id + "HelperSetter";
             setHelperButton.disabled = true;
             setHelperButton.addEventListener('click', setHelper.bind(null, id));
-            
-            let changeHelperButton = document.createElement("button");
-            changeHelperButton.innerHTML = "Change Helper";
-            changeHelperButton.id = "person" + id + "HelperChanger";
-            changeHelperButton.classList.add("is-hidden");
+
+            let changeHelperButton = createButton("Change Helper", ["button", "is-warning", "is-hidden"], "person" + id + "HelperChanger");
+            //document.createElement("button");
+            // changeHelperButton.classList.add(["button", "is-warning"]);
+            // changeHelperButton.innerHTML = "Change Helper";
+            // changeHelperButton.id = "person" + id + "HelperChanger";
+            // changeHelperButton.classList.add("is-hidden");
             changeHelperButton.addEventListener('click', changeHelper.bind(null, id));
-            
-            helpersContainer.appendChild(setHelperButton);
-            helpersContainer.appendChild(changeHelperButton);
-            pDiv.append(helpersContainer);
-            let btn = document.createElement("button");
-            btn.innerHTML = "Remove";
+
+            let buttonsDiv = document.createElement("div");
+            buttonsDiv.classList.add("padTop12");
+            let beingHelpedByBanner = document.createElement("span");
+            beingHelpedByBanner.id = "person" + id + "beingHelpedByBanner";
+            beingHelpedByBanner.innerHTML = "Currently being assissted by: ";
+            beingHelpedByBanner.classList.add("is-hidden");
+            buttonsDiv.append(beingHelpedByBanner);
+            buttonsDiv.append(helpersContainer);
+            buttonsDiv.append(setHelperButton);
+            buttonsDiv.appendChild(changeHelperButton);
+
+            pDiv.append(buttonsDiv);
+            let mgmtDiv = document.createElement("div");
+            mgmtDiv.id = "person" + id + "mgmt";
+            mgmtDiv.classList.add("padTop12");
+
+            let btn = createButton("Remove", ["button", "is-danger"], "person" + id + "Remover");
             btn.addEventListener('click', function () {
                 showPerson('person' + id);
             });
+            mgmtDiv.append(btn);
+            pDiv.append(mgmtDiv);
             div.append(pDiv);
-            div.append(btn);
+            div.append(document.createElement("hr"));
         }
     }
 
@@ -199,27 +225,37 @@ function refreshQueue() {
     container.append(div);
 }
 
+function createButton(content, classes, id) {
+    let btn = document.createElement("button");
+    btn.id = id;
+    btn.innerHTML = content;
+    btn.classList.add(...classes);
+    return btn;
+}
+
 function setHelper(id) {
     const helperId = document.getElementById("person" + id + "HelpersList").value;
-    let person = people.find(x=>x.id == id);
+    let person = people.find(x => x.id == id);
     person.helperId = helperId;
     document.getElementById("person" + id + "HelperSetter").classList.add("is-hidden");
     document.getElementById("person" + id + "HelpersList").disabled = true;
     document.getElementById("person" + id + "HelperChanger").classList.remove("is-hidden");
+    document.getElementById("person" + id + "beingHelpedByBanner").classList.remove("is-hidden");
 }
 
 function changeHelper(id) {
     const helperId = document.getElementById("person" + id + "HelpersList").value;
-    let person = people.find(x=>x.id == id);
+    let person = people.find(x => x.id == id);
     person.helperId = null;
     document.getElementById("person" + id + "HelperSetter").classList.remove("is-hidden");
     document.getElementById("person" + id + "HelpersList").disabled = false;
     document.getElementById("person" + id + "HelperChanger").classList.add("is-hidden");
+    document.getElementById("person" + id + "beingHelpedByBanner").classList.add("is-hidden");
 }
 
 function disableSettingUnselectedHelper(id) {
-    const helperId =  document.getElementById("person" + id + "HelpersList").value;
-        document.getElementById("person" + id + "HelperSetter").disabled = helperId < 0;
+    const helperId = document.getElementById("person" + id + "HelpersList").value;
+    document.getElementById("person" + id + "HelperSetter").disabled = helperId < 0;
 }
 
 function computeAgo(now, from) {
