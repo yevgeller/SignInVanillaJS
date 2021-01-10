@@ -229,13 +229,13 @@ function refreshQueue() {
     container.append(div);
 }
 
-function createButton(content, classes, id) {
-    let btn = document.createElement("button");
-    btn.id = id;
-    btn.innerHTML = content;
-    btn.classList.add(...classes);
-    return btn;
-}
+// function createButton(content, classes, id) {
+//     let btn = document.createElement("button");
+//     btn.id = id;
+//     btn.innerHTML = content;
+//     btn.classList.add(...classes);
+//     return btn;
+// }
 
 function createElementWithOptions(type, innerHTML, classList, id){
     let el = document.createElement(type);
