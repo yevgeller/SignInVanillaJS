@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
     servicePersonnel.sort(compareHelpers);
     loadReasonsForVisit();
     setRandomGuest();
-    while(people.length < 3) {
+    while (people.length < 3) {
         addNew();
     }
 }, false);
@@ -44,13 +44,13 @@ function setRandomGuest() {
         if (chb.type == "checkbox") {
             chb.checked = false; //reset
             let j = Math.random();
-            if(j < 0.35) {
+            if (j < 0.35) {
                 chb.checked = true;
                 flag = true;
-            } 
+            }
         }
     }
-    if(!flag) {
+    if (!flag) {
         document.getElementById("addToQueueBtn").disabled = true;
     }
 }
@@ -154,14 +154,14 @@ function refreshQueue() {
         div.append("No one in queue");
     } else {
         const nowMs = (new Date()).getTime();
-        let customersInLobby = people.filter(x=>x.whenDone == null);
+        let customersInLobby = people.filter(x => x.whenDone == null);
 
-        for (var i = 0; i < customersInLobby.length; i++) {
-            const id = people[i].id;
+        for (let i = 0; i < customersInLobby.length; i++) {
+            const id = customersInLobby[i].id;
             let pDiv = document.createElement("div");
             pDiv.id = "person" + id;
-            pDiv.innerHTML = '<strong>' + people[i].name + '</strong>, arrived <u>' + computeAgo(nowMs, people[i].whenMs) + '</u>';
-            pDiv.innerHTML += ' <i>(' + people[i].whyCame.map(x => x['reason']) + ')</i>.';
+            pDiv.innerHTML = '<strong>' + customersInLobby[i].name + '</strong>, arrived <u>' + computeAgo(nowMs, customersInLobby[i].whenMs) + '</u>';
+            pDiv.innerHTML += ' <i>(' + customersInLobby[i].whyCame.map(x => x['reason']) + ')</i>.';
 
             let helpersContainer = document.createElement('div');
             helpersContainer.classList.add('select');
@@ -214,14 +214,29 @@ function refreshQueue() {
             div.append(pDiv);
             div.append(document.createElement("hr"));
         }
+
+        let container = document.getElementById("queueContainer");
+        container.append(div);
+
+        let logContainer = document.getElementById("completedLog");
+
+        let servedCustomers = people.filter(x => x.whenDone != null);
+        for (let i = 0; i < servedCustomers.length; i++) {
+            const id = servedCustomers[i].id;
+            let pDiv = document.createElement("div");
+            pDiv.id = "served" + id;
+            pDiv.innerHTML = '<strong>' + servedCustomers[i].name + '</strong>, spent <u>' + computeTimeSpan(servedCustomers[i].whenDone - servedCustomers[i].when) + '</u>';
+            pDiv.innerHTML += ' <i>(' + servedCustomers[i].whyCame.map(x => x['reason']) + ')</i>.';
+
+
+            logContainer.append(pDiv);
+            logContainer.append(document.createElement("hr"));
+        }
     }
 
-    let container = document.getElementById("queueContainer");
-    container.innerHTML = "";
-    container.append(div);
 }
 
-function createElementWithOptions(type, innerHTML, classList, id){
+function createElementWithOptions(type, innerHTML, classList, id) {
     let el = document.createElement(type);
     el.id = id;
     el.innerHTML = innerHTML;
@@ -232,7 +247,7 @@ function createElementWithOptions(type, innerHTML, classList, id){
 function setHelper(id) {
     const helperId = document.getElementById("person" + id + "HelpersList").value;
     let person = people.find(x => x.id == id);
-    if(!('helpersHistory' in person)){
+    if (!('helpersHistory' in person)) {
         person.helpersHistory = [];
     }
     person.helpersHistory.push({
@@ -252,7 +267,7 @@ function changeHelper(id) {
     const helperId = document.getElementById("person" + id + "HelpersList").value;
     let person = people.find(x => x.id == id);
     person.isBeingHelped = false;
-    let helperRecord = person.helpersHistory.find(x=>x.id === helperId && x.endedWhen == null);
+    let helperRecord = person.helpersHistory.find(x => x.id === helperId && x.endedWhen == null);
     helperRecord.endedWhen = (new Date).getTime();
     console.log(person);
     document.getElementById("person" + id + "HelperSetter").classList.remove("is-hidden");
@@ -275,6 +290,21 @@ function computeAgo(now, from) {
     else if (diff < oneMin) return 'less than a minute ago'
     else if (diff < fiveMin) return 'within the last 5 min'
     else return Math.round(diff / oneMin) + ' minutes ago'
+}
+
+function computeTimeSpan(ms) {
+    const oneSec = 1000;
+    const oneMin = 60000;
+    const oneHour = oneMin * 60;
+    if (ms > oneHour) {
+        return Math.round(ms / oneHour) + ' hours';
+    } else if (ms > oneMin) {
+        return Math.round(ms / oneMin) + ' minutes';
+    } else if (ms > oneSec) {
+        return Math.round(ms / 1000) + ' seconds';
+    } else {
+        return 'less than a second';
+    }
 }
 
 function showPerson(divId) {
