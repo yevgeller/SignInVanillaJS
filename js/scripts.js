@@ -205,7 +205,7 @@ function refreshQueue() {
             mgmtDiv.id = "person" + id + "mgmt";
             mgmtDiv.classList.add("padTop12");
 
-            let btn = createElementWithOptions("button", "Remove", ["button", "is-danger"], "person" + id + "Remover");
+            let btn = createElementWithOptions("button", "Done", ["button", "is-danger", "is-light", "is-hidden"], "person" + id + "Remover");
             btn.addEventListener('click', function () {
                 showPerson('person' + id);
             });
@@ -216,20 +216,29 @@ function refreshQueue() {
         }
 
         let container = document.getElementById("queueContainer");
+        container.innerHTML = "";
+        if(customersInLobby.length === 0) {
+            container.innerHTML = "Queue is empty";
+        }
         container.append(div);
 
         let logContainer = document.getElementById("completedLog");
-
+        logContainer.innerHTML = "";
         let servedCustomers = people.filter(x => x.whenDone != null);
+        
+        if(servedCustomers.length === 0) {
+            logContainer.innerHTML = "No customers completed their visits."
+        }
+
         for (let i = 0; i < servedCustomers.length; i++) {
             const id = servedCustomers[i].id;
-            let pDiv = document.createElement("div");
-            pDiv.id = "served" + id;
-            pDiv.innerHTML = '<strong>' + servedCustomers[i].name + '</strong>, spent <u>' + computeTimeSpan(servedCustomers[i].whenDone - servedCustomers[i].when) + '</u>';
-            pDiv.innerHTML += ' <i>(' + servedCustomers[i].whyCame.map(x => x['reason']) + ')</i>.';
+            let servedDiv = document.createElement("div");
+            servedDiv.id = "served" + id;
+            servedDiv.innerHTML = '<strong>' + servedCustomers[i].name + '</strong>, spent <u>' + computeTimeSpan(servedCustomers[i].whenDone - servedCustomers[i].when) + '</u>';
+            servedDiv.innerHTML += ' <i>(' + servedCustomers[i].whyCame.map(x => x['reason']) + ')</i>.';
 
 
-            logContainer.append(pDiv);
+            logContainer.append(servedDiv);
             logContainer.append(document.createElement("hr"));
         }
     }
@@ -261,6 +270,7 @@ function setHelper(id) {
     document.getElementById("person" + id + "HelpersList").disabled = true;
     document.getElementById("person" + id + "HelperChanger").classList.remove("is-hidden");
     document.getElementById("person" + id + "beingHelpedByBanner").classList.remove("is-hidden");
+    document.getElementById("person" + id + "Remover").classList.remove("is-hidden");
 }
 
 function changeHelper(id) {
@@ -274,6 +284,7 @@ function changeHelper(id) {
     document.getElementById("person" + id + "HelpersList").disabled = false;
     document.getElementById("person" + id + "HelperChanger").classList.add("is-hidden");
     document.getElementById("person" + id + "beingHelpedByBanner").classList.add("is-hidden");
+    document.getElementById("person" + id + "Remover").classList.add("is-hidden");
 }
 
 function disableSettingUnselectedHelper(id) {
