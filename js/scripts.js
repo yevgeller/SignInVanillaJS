@@ -179,22 +179,23 @@ function refreshQueue() {
                 option.value = servicePersonnel[i].id;
                 helpers.add(option, 0);
             }
+            let currentHelper = customersInLobby[i].helpersHistory && customersInLobby[i].helpersHistory.find(x => x.endedWhen == null);
+            //if (!currentHelper) {
+                helpersContainer.addEventListener('change', disableSettingUnselectedHelper.bind(null, id));
+                helpersContainer.append(helpers);
 
-            helpersContainer.addEventListener('change', disableSettingUnselectedHelper.bind(null, id));
-            helpersContainer.append(helpers);
+                let setHelperButton = createElementWithOptions("button", "Set Helper", ["button", "is-success"], "person" + id + "HelperSetter"); //document.createElement("button");
+                setHelperButton.disabled = true;
+                setHelperButton.addEventListener('click', setHelper.bind(null, id));
 
-            let setHelperButton = createElementWithOptions("button", "Set Helper", ["button", "is-success"], "person" + id + "HelperSetter"); //document.createElement("button");
-            setHelperButton.disabled = true;
-            setHelperButton.addEventListener('click', setHelper.bind(null, id));
+                let changeHelperButton = createElementWithOptions("button", "Change Helper", ["button", "is-warning", "is-hidden"], "person" + id + "HelperChanger");
+                changeHelperButton.addEventListener('click', changeHelper.bind(null, id));
 
-            let changeHelperButton = createElementWithOptions("button", "Change Helper", ["button", "is-warning", "is-hidden"], "person" + id + "HelperChanger");
-            changeHelperButton.addEventListener('click', changeHelper.bind(null, id));
+                let buttonsDiv = document.createElement("div");
+                buttonsDiv.classList.add("padTop12");
 
-            let buttonsDiv = document.createElement("div");
-            buttonsDiv.classList.add("padTop12");
-
-            let beingHelpedByBanner = createElementWithOptions("span", "Currently being assisted by:", ["is-hidden"], "person" + id + "beingHelpedByBanner");
-
+                let beingHelpedByBanner = createElementWithOptions("span", "Currently being assisted by:", ["is-hidden"], "person" + id + "beingHelpedByBanner");
+            //}
             buttonsDiv.append(beingHelpedByBanner);
             buttonsDiv.append(helpersContainer);
             buttonsDiv.append(setHelperButton);
@@ -217,16 +218,16 @@ function refreshQueue() {
 
         let container = document.getElementById("queueContainer");
         container.innerHTML = "";
-        if(customersInLobby.length === 0) {
-            container.innerHTML = "Queue is empty";
+        if (customersInLobby.length === 0) {
+            container.innerHTML = "No one is in the lobby.";
         }
         container.append(div);
 
         let logContainer = document.getElementById("completedLog");
         logContainer.innerHTML = "";
         let servedCustomers = people.filter(x => x.whenDone != null);
-        
-        if(servedCustomers.length === 0) {
+
+        if (servedCustomers.length === 0) {
             logContainer.innerHTML = "No customers completed their visits."
         }
 
@@ -236,7 +237,12 @@ function refreshQueue() {
             servedDiv.id = "served" + id;
             servedDiv.innerHTML = '<strong>' + servedCustomers[i].name + '</strong>, spent <u>' + computeTimeSpan(servedCustomers[i].whenDone - servedCustomers[i].when) + '</u>';
             servedDiv.innerHTML += ' <i>(' + servedCustomers[i].whyCame.map(x => x['reason']) + ')</i>.';
-
+            servedDiv.innerHTML += "<div>Served by:<ul>";
+            servedCustomers[i].helpersHistory.forEach(function (helper) {
+                let a = servicePersonnel.find(x => x.id == helper.id);
+                servedDiv.innerHTML += "<li>" + (a ? a.name : "(no name)") +
+                    " for " + computeTimeSpan(helper.endedWhen - helper.startedWhen) + "</li>";
+            });
 
             logContainer.append(servedDiv);
             logContainer.append(document.createElement("hr"));
