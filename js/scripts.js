@@ -163,6 +163,7 @@ function refreshQueue() {
             pDiv.innerHTML = '<strong>' + customersInLobby[i].name + '</strong>, arrived <u>' + computeAgo(nowMs, customersInLobby[i].whenMs) + '</u>';
             pDiv.innerHTML += ' <i>(' + customersInLobby[i].whyCame.map(x => x['reason']) + ')</i>.';
 
+            //create helpers dropdown:
             let helpersContainer = document.createElement('div');
             helpersContainer.classList.add('select');
             helpersContainer.name = "helpersContainer";
@@ -172,30 +173,31 @@ function refreshQueue() {
             defaultOption.text = 'Choose...';
             defaultOption.value = -1;
             helpers.add(defaultOption, 1);
-
+            //fill helpers dropdown:
             for (let i = servicePersonnel.length - 1; i >= 0; i--) {
                 let option = document.createElement('option');
                 option.text = servicePersonnel[i].name;
                 option.value = servicePersonnel[i].id;
                 helpers.add(option, 0);
             }
-            let currentHelper = customersInLobby[i].helpersHistory && customersInLobby[i].helpersHistory.find(x => x.endedWhen == null);
-            //if (!currentHelper) {
-                helpersContainer.addEventListener('change', disableSettingUnselectedHelper.bind(null, id));
-                helpersContainer.append(helpers);
 
-                let setHelperButton = createElementWithOptions("button", "Set Helper", ["button", "is-success"], "person" + id + "HelperSetter"); //document.createElement("button");
-                setHelperButton.disabled = true;
-                setHelperButton.addEventListener('click', setHelper.bind(null, id));
+            helpersContainer.addEventListener('change', disableSettingUnselectedHelper.bind(null, id));
+            helpersContainer.append(helpers);
 
-                let changeHelperButton = createElementWithOptions("button", "Change Helper", ["button", "is-warning", "is-hidden"], "person" + id + "HelperChanger");
-                changeHelperButton.addEventListener('click', changeHelper.bind(null, id));
 
-                let buttonsDiv = document.createElement("div");
-                buttonsDiv.classList.add("padTop12");
+            let setHelperButton = createElementWithOptions("button", "Set Helper", ["button", "is-success"], "person" + id + "HelperSetter");
+            setHelperButton.disabled = true;
+            setHelperButton.addEventListener('click', setHelper.bind(null, id));
 
-                let beingHelpedByBanner = createElementWithOptions("span", "Currently being assisted by:", ["is-hidden"], "person" + id + "beingHelpedByBanner");
-            //}
+            let changeHelperButton = createElementWithOptions("button", "Change Helper", ["button", "is-warning", "is-hidden"], "person" + id + "HelperChanger");
+            changeHelperButton.addEventListener('click', changeHelper.bind(null, id));
+
+            let buttonsDiv = document.createElement("div");
+            buttonsDiv.classList.add("padTop12");
+
+            let beingHelpedByBanner = createElementWithOptions("span", "Currently being assisted by:", ["is-hidden"], "person" + id + "beingHelpedByBanner");
+
+
             buttonsDiv.append(beingHelpedByBanner);
             buttonsDiv.append(helpersContainer);
             buttonsDiv.append(setHelperButton);
@@ -214,6 +216,16 @@ function refreshQueue() {
             pDiv.append(mgmtDiv);
             div.append(pDiv);
             div.append(document.createElement("hr"));
+
+            let currentHelper = customersInLobby[i].helpersHistory && customersInLobby[i].helpersHistory.find(x => x.endedWhen == null);
+            if (currentHelper) {
+                helpers.value = currentHelper.id;
+                div.querySelector("#person" + id + "HelperSetter").classList.add("is-hidden");
+                div.querySelector("#person" + id + "HelpersList").disabled = true;
+                div.querySelector("#person" + id + "HelperChanger").classList.remove("is-hidden");
+                div.querySelector("#person" + id + "beingHelpedByBanner").classList.remove("is-hidden");
+                div.querySelector("#person" + id + "Remover").classList.remove("is-hidden");
+            }
         }
 
         let container = document.getElementById("queueContainer");
